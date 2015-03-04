@@ -18,7 +18,10 @@
     "hubot-redis-brain": "0.0.2",
     "hubot": "^2.11.1",
     "hubot-scripts": "^2.5.16",
-    "hubot-slack": "^3.3.0"
+    "hubot-slack": "^3.3.0",
+    "cron": "^1.0.8",
+    "request": "^2.53.0",
+    "underscore": "^1.8.2"
   },
   "engines": {
     "node": "0.10.x"
