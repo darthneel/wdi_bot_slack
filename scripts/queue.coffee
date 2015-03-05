@@ -31,7 +31,7 @@ module.exports = (robot) ->
       msg.reply "usage: bot queue me for [reason]"
 
   robot.respond /q(ueue)? me for (.+)/i, (msg) ->
-    name = msg.message.user.mention_name || msg.message.user.name
+    name = msg.envelope.user.real_name
     reason = msg.match[2]
     if _.any(robot.brain.data.instructorQueue, (student) -> student.name == name)
       msg.send "#{name} is already queued"
@@ -40,7 +40,7 @@ module.exports = (robot) ->
       msg.send "Current queue is: #{stringifyQueue()}"
 
   robot.respond /unq(ueue)? me/i, (msg) ->
-    name = msg.message.user.mention_name || msg.message.user.name
+    name = msg.envelope.user.real_name
     if _.any(robot.brain.data.instructorQueue, (student) -> student.name == name)
       robot.brain.data.instructorQueue = _.filter robot.brain.data.instructorQueue, (student) ->
         student.name != name
@@ -55,7 +55,7 @@ module.exports = (robot) ->
     else
       student = popStudent()
       student.poppedAt = new Date()
-      student.poppedBy = msg.message.user.mention_name || msg.message.user.name
+      student.poppedBy = msg.envelope.user.real_name
       robot.brain.data.instructorQueuePops.push student
       msg.reply "go help @#{student.name} with #{student.reason}, queued at #{tfmt student.queuedAt}"
 
@@ -66,8 +66,8 @@ module.exports = (robot) ->
       msg.send stringifyQueue()
 
   robot.respond /empty q(ueue)?/i, (msg) ->
-    instructors = ["JeffKonowitch", "NeelPatel","SeanWest", "EricKramer"]
-    if instructors.indexOf(msg.message.user.mention_name) != -1
+    instructors = ["Jeff Konowitch", "Neel Patel", "Andrew Fritz"]
+    if instructors.indexOf(msg.envelope.user.real_name) != -1
       robot.brain.data.instructorQueue = []
       msg.reply "cleared the queue"
     else
