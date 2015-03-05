@@ -57,7 +57,7 @@ module.exports = (robot) ->
       student.poppedAt = new Date()
       student.poppedBy = msg.envelope.user.real_name
       robot.brain.data.instructorQueuePops.push student
-      msg.reply "go help @#{student.name} with #{student.reason}, queued at #{tfmt student.queuedAt}"
+      msg.reply "go help #{student.name} with #{student.reason}, queued at #{tfmt student.queuedAt}"
 
   robot.respond /student q(ueue)?/i, (msg) ->
     if _.isEmpty robot.brain.data.instructorQueue
