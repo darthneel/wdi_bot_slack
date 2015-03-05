@@ -5,6 +5,6 @@ module.exports = (robot) ->
 		# console.log msg.message
 		# console.log msg.user
 		# console.log msg.message.real_name
-		msg.send Object.keys(msg)
+		msg.send "hey"
 	
 	
