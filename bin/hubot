@@ -5,4 +5,11 @@ set -e
 npm install
 export PATH="node_modules/.bin:node_modules/hubot/node_modules/.bin:$PATH"
 
+export HUBOT_SLACK_TEAM="ga-students"
+export HUBOT_SLACK_TOKEN="xoxb-3928777840-pP2WkycjYIaAQhnzMGWbjzhO"
+
+export HUBOT_LOG_LEVEL="debug"
+
+# bin/hubot --adapter slack
+
 exec node_modules/.bin/hubot "$@"
