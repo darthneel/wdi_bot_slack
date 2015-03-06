@@ -107,7 +107,7 @@ module.exports = (robot) ->
       .put(queryString) (err, response, body) ->
         throw err if err
         if typeof msg is 'string'
-          messageRoom process.env.HUBOT_INSTRUCTOR_ROOM "Pull request for user #{pullRequest.user.login} has been closed"
+          messageRoom process.env.HUBOT_INSTRUCTOR_ROOM, "Pull request for user #{pullRequest.user.login} has been closed"
         else
           msg.send "Pull request for user #{pullRequest.user.login} has been closed"
 
