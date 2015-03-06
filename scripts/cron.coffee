@@ -82,9 +82,9 @@ module.exports = (robot) ->
       msg.send "Error: The job number you entered is either already running or does not exist"
       msg.send "Use the command 'l jobs' to check the job number"
 
-  # robot.respond /clear brain/i, (msg) ->
-  #   robot.brain.data.cronJobs = {}
-  #   msg.send "Brain has been cleared"
+  robot.respond /clear cron/i, (msg) ->
+    robot.brain.data.cronJobs = {}
+    msg.send "Brain has been cleared"
     
 # ======= Class definitions =======
 

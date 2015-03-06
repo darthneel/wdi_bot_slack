@@ -1,9 +1,50 @@
-_      = require 'underscore'
-fs     = require 'fs'
-moment = require 'moment-timezone'
+_       = require 'underscore'
+fs      = require 'fs'
+moment  = require 'moment-timezone'
+request = require 'request'
+
+# https://slack.com/api/chat.postMessage?token=xoxb-3928777840-pP2WkycjYIaAQhnzMGWbjzhO&channel=G03T4G1UX&text=api%20test&as_user=true
+
+#===== Cron functions
+
+sendMorningMessage = (robot) ->
+  # pattern = "*/10 * * * * *"
+  pattern = "00 15 9 * * 1-5"
+  url = "#{process.env.HEROKU_URL}/hubot/morningmessage"
+  timezone = "America/New_York"
+  description = "Messages room at 9:15am to remind students to submit their hw"
+
+  robot.emit "cron created", {
+    pattern: pattern,
+    url: url,
+    timezone: timezone,
+    description: description,
+    }
+
+hwHandler = (robot) ->
+  pattern = "00 30 9 * * 1-5"
+  url = "#{process.env.HEROKU_URL}/hubot/handlehw"
+  timezone = "America/New_York"
+  description = "At 9:30am will automatically push status to WDI api and close all pull requests"
+
+  robot.emit "cron created", {
+    pattern: pattern,
+    url: url,
+    timezone: timezone,
+    description: description,
+    }
+
+#=== Starts export function
 
 module.exports = (robot) ->
   robot.brain.data.hwData ?= {}
+
+#==== Initiate all Cron jobs once database has connected
+  robot.brain.on 'loaded', () ->
+    messageRoom(robot)
+    hwHandler(robot)
+
+#==== Helper functions
 
   instructorsHash = ->
     buffer = fs.readFileSync "./lib/instructors.json"
@@ -62,7 +103,7 @@ module.exports = (robot) ->
       .put(queryString) (err, response, body) ->
         throw err if err
         if typeof msg is 'string'
-          robot.messageRoom process.env.HUBOT_INSTRUCTOR_ROOM "Pull request for user #{pullRequest.user.login} has been closed"
+          robot.sendMorningMessage process.env.HUBOT_INSTRUCTOR_ROOM "Pull request for user #{pullRequest.user.login} has been closed"
         else
           msg.send "Pull request for user #{pullRequest.user.login} has been closed"
 
@@ -72,7 +113,7 @@ module.exports = (robot) ->
         if msg? and typeof msg not "string"
           msg.send "No open pull requests at this time"
         else
-          robot.messageRoom process.env.HUBOT_INSTRUCTOR_ROOM, "Update: There are no open pull requests at this time"
+          robot.sendMorningMessage process.env.HUBOT_INSTRUCTOR_ROOM, "Update: There are no open pull requests at this time"
       else
         _.each allPullRequests.items, (pullRequest) ->
           closePullRequest(msg, pullRequest)
@@ -103,12 +144,50 @@ module.exports = (robot) ->
 
         robot.brain.data.hwData[date].push payload
 
+  messageRoom = (room, message) ->
+    token = process.env.HUBOT_SLACK_TOKEN
+    text = message.replace(" ", "%20")
+    request "https://slack.com/api/chat.postMessage?token=#{token}&channel=#{room}&text=#{text}&as_user=true", (err, res, body) ->
+      throw err if err
+      console.log body
+
+
+
+  #===== HTTP Routes
+  
   robot.router.get "/hubot/hwdata", (req, res) ->
     data = JSON.stringify robot.brain.data.hwData
     res.end data
 
+  robot.router.get "/hubot/morningmessage", (req, res) ->
+    studentRoom = process.env.HUBOT_STUDENT_ROOM
+    instructorRoom = process.env.HUBOT_INSTRUCTOR_ROOM
+    now = moment()
+    weekdays = [1..5]
+    if (moment.tz now.format(), "America/New_York").day() in weekdays
+      messageRoom studentRoom, "Reminder: Please submit yesterday's work before 9:30am"
+      # messageRoom instructorRoom, "Update: Students have been reminded to submit their homework before 9:30am"
+      res.end "Response sent to room"
+    else
+      res.end "Wrong day!"
 
-#=======================
+  robot.router.get "/hubot/handlehw", (req, res) ->
+    studentRoom = process.env.HUBOT_STUDENT_ROOM
+    instructorRoom = process.env.HUBOT_INSTRUCTOR_ROOM
+    now = moment()
+    weekdays = [0..5]
+    if (moment.tz now.format(), "America/New_York").day() in weekdays
+      # unless robot.brain.data.hwReport[hwDueDate()]?
+      #   robot.brain.data.hwReport[hwDueDate()] = {}
+      checkHW()
+      closeAllPullRequests("msg")
+      res.end "Response sent to room"
+    else
+      res.end "Wrong day!"
+
+
+
+#========== Hubot response patterns
 
   robot.respond /pr count/i, (msg) ->
     if validate(msg)
