@@ -43,6 +43,7 @@ module.exports = (robot) ->
   robot.brain.on 'loaded', () ->
     sendMorningMessage(robot)
     hwHandler(robot)
+    console.log robot.brain.data.hwData
 
 #==== Helper functions
 
