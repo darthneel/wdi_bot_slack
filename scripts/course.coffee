@@ -39,6 +39,7 @@ module.exports = (robot) ->
 
   robot.respond /set instructors/i, (msg) ->
     setInstructors(msg)
+    console.log instructorsHash()
 
   robot.respond /get instructors/i, (msg) ->
     console.log instructorsHash()
