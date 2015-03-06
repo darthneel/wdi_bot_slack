@@ -10,6 +10,10 @@ request = require 'request'
 
 module.exports = (robot) ->
 
+  instructorsHash = ->
+    buffer = fs.readFileSync "./lib/instructors.json"
+    JSON.parse buffer.toString()
+
   setStudents = (msg) ->
     url = "#{process.env.STUDENT_GIST_URL}"
     request url, (err, res, body) ->
@@ -35,5 +39,8 @@ module.exports = (robot) ->
 
   robot.respond /set instructors/i, (msg) ->
     setInstructors(msg)
+
+  robot.respond /get instructors/i, (msg) ->
+    console.log instructorsHash()
 
 

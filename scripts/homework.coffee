@@ -66,6 +66,8 @@ module.exports = (robot) ->
 
   validate = (msg) ->
     instructors = Object.keys instructorsHash()
+    console.log instructors
+    console.log msg.envelope.user.real_name
     if msg.envelope.user.real_name in instructors
       return true
     else
@@ -123,7 +125,7 @@ module.exports = (robot) ->
   checkHW = (msg) ->
     date = hwDueDate()
     robot.brain.data.hwData[date] = []
-    
+
     console.log robot.brain.data.hwData[date]
 
     students = studentsHash()  
