@@ -19,7 +19,7 @@ module.exports = (robot) ->
     JSON.parse buffer.toString()
 
   setStudents = (msg) ->
-    url = "#{process.env.STUDENT_GIST_URL}"
+    url = process.env.STUDENT_GIST_URL
     request url, (err, res, body) ->
       fs.writeFile "./lib/students.json", body, (err) ->
         throw err if err
@@ -29,7 +29,7 @@ module.exports = (robot) ->
           console.log "Students set upon server restart"
 
   setInstructors = (msg) ->
-    url = "#{process.env.INSTRUCTOR_GIST_URL}"
+    url = process.env.INSTRUCTOR_GIST_URL
     request url, (err, res, body) ->
       fs.writeFile "./lib/instructors.json", body, (err) ->
         throw err if err

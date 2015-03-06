@@ -44,7 +44,7 @@ module.exports = (robot) ->
     console.log "DB HAS LOADED"
     sendMorningMessage(robot)
     hwHandler(robot)
-    console.log robot.brain.data.hwData
+    # console.log robot.brain.data.hwData
 
 #==== Helper functions
 

@@ -105,7 +105,7 @@ class Job
     @running = false
 
   createCron: () ->
-    console.log "in create"
+    # console.log "in create"
     @cronJob = new CronJob @pattern, =>
       request @url, (err, res, body) ->
         console.log res
