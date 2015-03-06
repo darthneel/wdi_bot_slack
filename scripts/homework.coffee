@@ -8,7 +8,8 @@ request = require 'request'
 #===== Cron functions
 
 sendMorningMessage = (robot) ->
-  pattern = "00 15 9 * * 1-5"
+  pattern = "*/10 * * * * *"
+  # pattern = "00 15 9 * * 1-5"
   url = "#{process.env.HEROKU_URL}/hubot/morningmessage"
   timezone = "America/New_York"
   description = "Messages room at 9:15am to remind students to submit their hw"
@@ -226,7 +227,3 @@ module.exports = (robot) ->
 
   robot.respond /clear stats/i, (msg) ->
     robot.brain.data.completionStats = {}
-
-  robot.respond /validate/i, (msg) ->
-    bool = validate(msg)
-    msg.send bool
