@@ -10,6 +10,10 @@ request = require 'request'
 
 module.exports = (robot) ->
 
+  robot.brain.on 'loaded', () ->
+  setStudents()
+  setInstructors()
+
   instructorsHash = ->
     buffer = fs.readFileSync "./lib/instructors.json"
     JSON.parse buffer.toString()
