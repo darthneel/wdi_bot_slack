@@ -144,6 +144,10 @@ module.exports = (robot) ->
 
         robot.brain.data.hwData[date].push payload
 
+        if msg?
+          msg.send "HW updated for #{student["fname"]} #{student["lname"]}"
+
+
   messageRoom = (room, message) ->
     token = process.env.HUBOT_SLACK_TOKEN
     text = message.replace(" ", "%20")
