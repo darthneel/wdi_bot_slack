@@ -41,7 +41,7 @@ module.exports = (robot) ->
 
 #==== Initiate all Cron jobs once database has connected
   robot.brain.on 'loaded', () ->
-    messageRoom(robot)
+    sendMorningMessage(robot)
     hwHandler(robot)
 
 #==== Helper functions
@@ -103,7 +103,7 @@ module.exports = (robot) ->
       .put(queryString) (err, response, body) ->
         throw err if err
         if typeof msg is 'string'
-          robot.sendMorningMessage process.env.HUBOT_INSTRUCTOR_ROOM "Pull request for user #{pullRequest.user.login} has been closed"
+          messageRoom process.env.HUBOT_INSTRUCTOR_ROOM "Pull request for user #{pullRequest.user.login} has been closed"
         else
           msg.send "Pull request for user #{pullRequest.user.login} has been closed"
 
@@ -113,7 +113,7 @@ module.exports = (robot) ->
         if msg? and typeof msg not "string"
           msg.send "No open pull requests at this time"
         else
-          robot.sendMorningMessage process.env.HUBOT_INSTRUCTOR_ROOM, "Update: There are no open pull requests at this time"
+          messageRoom process.env.HUBOT_INSTRUCTOR_ROOM, "Update: There are no open pull requests at this time"
       else
         _.each allPullRequests.items, (pullRequest) ->
           closePullRequest(msg, pullRequest)
@@ -161,6 +161,7 @@ module.exports = (robot) ->
 
   robot.router.get "/hubot/morningmessage", (req, res) ->
     studentRoom = process.env.HUBOT_STUDENT_ROOM
+    console.log studentRoom
     instructorRoom = process.env.HUBOT_INSTRUCTOR_ROOM
     now = moment()
     weekdays = [1..5]
