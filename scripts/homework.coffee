@@ -66,7 +66,7 @@ module.exports = (robot) ->
 
   validate = (msg) ->
     instructors = Object.keys instructorsHash()
-    if msg.message.user.name in instructors
+    if msg.envelope.user.real_name in instructors
       return true
     else
       return false
