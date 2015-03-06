@@ -8,7 +8,6 @@ request = require 'request'
 #===== Cron functions
 
 sendMorningMessage = (robot) ->
-  # pattern = "*/10 * * * * *"
   pattern = "00 15 9 * * 1-5"
   url = "#{process.env.HEROKU_URL}/hubot/morningmessage"
   timezone = "America/New_York"
@@ -25,7 +24,7 @@ hwHandler = (robot) ->
   pattern = "00 30 9 * * 1-5"
   url = "#{process.env.HEROKU_URL}/hubot/handlehw"
   timezone = "America/New_York"
-  description = "At 9:30am will automatically push status to WDI api and close all pull requests"
+  description = "At 9:30am will close all pull requests and save hw to db"
 
   robot.emit "cron created", {
     pattern: pattern,
