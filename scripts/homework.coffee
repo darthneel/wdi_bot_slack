@@ -65,6 +65,7 @@ module.exports = (robot) ->
     return date
 
   validate = (msg) ->
+    console.log instructorsHash()
     instructors = Object.keys instructorsHash()
     console.log instructors
     console.log msg.envelope.user.real_name
@@ -225,3 +226,7 @@ module.exports = (robot) ->
 
   robot.respond /clear stats/i, (msg) ->
     robot.brain.data.completionStats = {}
+
+  robot.respond /validate/i, (msg) ->
+    bool = validate(msg)
+    msg.send bool
