@@ -37,6 +37,7 @@ hwHandler = (robot) ->
 
 module.exports = (robot) ->
   robot.brain.data.hwData ?= {}
+  robot.brain.data.completionStats ?= {}
 
 #==== Initiate all Cron jobs once database has connected
   robot.brain.on 'loaded', () ->
@@ -180,7 +181,7 @@ module.exports = (robot) ->
       # unless robot.brain.data.hwReport[hwDueDate()]?
       #   robot.brain.data.hwReport[hwDueDate()] = {}
       checkHW()
-      closeAllPullRequests("msg")
+      # closeAllPullRequests("msg")
       res.end "Response sent to room"
     else
       res.end "Wrong day!"
@@ -215,4 +216,7 @@ module.exports = (robot) ->
       msg.send "Sorry, you're not allowed to do that"
 
   robot.respond /clear brain/i, (msg) ->
-    robot.brain.data.hwData = {}
+    robot.brain.data.hwData = {}  
+
+  robot.respond /clear stats/i, (msg) ->
+    robot.brain.data.completionStats = {}
