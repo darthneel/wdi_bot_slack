@@ -3,7 +3,6 @@ fs     = require 'fs'
 moment = require 'moment-timezone'
 
 module.exports = (robot) ->
-  robot.brain.data.hwReport ?= {}
   robot.brain.data.hwData ?= {}
 
   instructorsHash = ->
@@ -80,7 +79,8 @@ module.exports = (robot) ->
 
   checkHW = (msg) ->
     date = hwDueDate()
-    robot.brain.data.hwData[date] = []  
+    robot.brain.data.hwData[date] = []
+    robot.brain.data.hwReport[date] = {}  
 
     console.log robot.brain.data.hwData[date]
 
@@ -99,8 +99,9 @@ module.exports = (robot) ->
 
         if studentMatch? then payload.completed = true else payload.completed = false
 
-        robot.brain.data.hwData[date].push payload
+        console.log payload
 
+        robot.brain.data.hwData[date].push payload
 
   robot.router.get "/hubot/hwdata", (req, res) ->
     data = JSON.stringify robot.brain.data.hwData
