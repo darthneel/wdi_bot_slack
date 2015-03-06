@@ -123,7 +123,7 @@ module.exports = (robot) ->
   checkHW = (msg) ->
     date = hwDueDate()
     robot.brain.data.hwData[date] = []
-    robot.brain.data.hwReport[date] = {}  
+    # robot.brain.data.hwReport[date] = {}  
 
     console.log robot.brain.data.hwData[date]
 
