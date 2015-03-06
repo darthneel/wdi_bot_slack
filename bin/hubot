@@ -7,6 +7,11 @@ export PATH="node_modules/.bin:node_modules/hubot/node_modules/.bin:$PATH"
 
 export HUBOT_SLACK_TEAM="ga-students"
 export HUBOT_SLACK_TOKEN="xoxb-3928777840-pP2WkycjYIaAQhnzMGWbjzhO"
+export STUDENT_GIST_URL="https://gist.githubusercontent.com/darthneel/7bd8ddadc8a7b0f69908/raw/1b4adb5f5a35794dc50df2c6b01fc969d6ee283d/students.json"
+export INSTRUCTOR_GIST_URL="https://gist.githubusercontent.com/darthneel/9ca51e5c6c9a9cf55a3f/raw/fcc7da233f5e055581fdc794a28f934c79358431/instructors.json"
+export HUBOT_GITHUB_TOKEN="622322018487e70fb98d9e2676d86118e8b1cd01"
+export GITHUB_USER_NAME="darthneel"
+export COURSE_REPO="ga-students/rosencrantz"
 
 export HUBOT_LOG_LEVEL="debug"
 
