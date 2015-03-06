@@ -16,7 +16,7 @@ module.exports = (robot) ->
   robot.on "cron created", (cron) ->
     result = _.where(robot.brain.data.cronJobs, {pattern: cron.pattern, url: cron.url, timezone: cron.timezone, description: cron.description})
     # === Ensures job is not already in database
-    console.log result
+    # console.log result
     unless result[0]?
       job = new Job cron.pattern, cron.url, cron.timezone, cron.description
       job.createCron()
@@ -25,7 +25,6 @@ module.exports = (robot) ->
       JOBS[job.id] = job
 
   robot.brain.on 'loaded', () ->
-    console.log "DB HAS LOADED"
     _.each robot.brain.data.cronJobs, (job, id) ->
 
       job = new Job job["pattern"], job["url"], job["timezone"], job["description"], job["running"]

@@ -41,6 +41,7 @@ module.exports = (robot) ->
 
 #==== Initiate all Cron jobs once database has connected
   robot.brain.on 'loaded', () ->
+    console.log "DB HAS LOADED"
     sendMorningMessage(robot)
     hwHandler(robot)
     console.log robot.brain.data.hwData
