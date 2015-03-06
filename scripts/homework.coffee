@@ -123,8 +123,7 @@ module.exports = (robot) ->
   checkHW = (msg) ->
     date = hwDueDate()
     robot.brain.data.hwData[date] = []
-    # robot.brain.data.hwReport[date] = {}  
-
+    
     console.log robot.brain.data.hwData[date]
 
     students = studentsHash()  
@@ -173,7 +172,7 @@ module.exports = (robot) ->
     weekdays = [1..5]
     if (moment.tz now.format(), "America/New_York").day() in weekdays
       messageRoom studentRoom, "Reminder: Please submit yesterday's work before 9:30am"
-      # messageRoom instructorRoom, "Update: Students have been reminded to submit their homework before 9:30am"
+      messageRoom instructorRoom, "Update: Students have been reminded to submit their homework before 9:30am"
       res.end "Response sent to room"
     else
       res.end "Wrong day!"
@@ -184,10 +183,8 @@ module.exports = (robot) ->
     now = moment()
     weekdays = [0..5]
     if (moment.tz now.format(), "America/New_York").day() in weekdays
-      # unless robot.brain.data.hwReport[hwDueDate()]?
-      #   robot.brain.data.hwReport[hwDueDate()] = {}
       checkHW()
-      # closeAllPullRequests("msg")
+      closeAllPullRequests("msg")
       res.end "Response sent to room"
     else
       res.end "Wrong day!"
