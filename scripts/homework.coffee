@@ -237,10 +237,10 @@ module.exports = (robot) ->
       msg.send "Sorry, you're not allowed to do that"
 
   robot.respond /hw stats/i, (msg) ->
-    if msg.envelope.user.name != msg.envelope.room
+    unless msg.envelope.user.name != msg.envelope.room
       msg.send msg.envelope.room
-    else
-      msg.envelope.user.name 
+      return
+    msg.send msg.envelope.user.name  
 
   robot.respond /clear brain/i, (msg) ->
     robot.brain.data.hwData = {}  
