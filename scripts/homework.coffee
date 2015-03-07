@@ -44,7 +44,7 @@ module.exports = (robot) ->
     console.log "DB HAS LOADED"
     sendMorningMessage(robot)
     hwHandler(robot)
-    # console.log robot.brain.data.hwData
+    setUpCompletionStats()
 
 #==== Helper functions
 
@@ -65,10 +65,7 @@ module.exports = (robot) ->
     return date
 
   validate = (msg) ->
-    console.log instructorsHash()
     instructors = Object.keys instructorsHash()
-    console.log instructors
-    console.log msg.envelope.user.real_name
     if msg.envelope.user.real_name in instructors
       return true
     else
@@ -81,6 +78,11 @@ module.exports = (robot) ->
     else
       date = (now.subtract 3, 'day').format "YYYY-MM-DD"
     return date
+
+  setUpCompletionStats = ->
+    students = studentsHash()
+    _.each students, (student) ->
+      robot.brain.data.completionStats[student.id] ?= {"allHWCodes":[], "completionPercentage": null}
 
   getOpenPulls = (msg, cb) ->
     robot.http("https://api.github.com/search/issues?access_token=#{process.env.HUBOT_GITHUB_TOKEN}&per_page=100&q=repo:#{process.env.COURSE_REPO}+type:pull+state:open")
@@ -115,7 +117,7 @@ module.exports = (robot) ->
   closeAllPullRequests = (msg) ->
     getOpenPulls msg, (allPullRequests) ->
       if allPullRequests.items.length is 0
-        if msg? and typeof msg not "string"
+        if msg && typeof msg != "string"
           msg.send "No open pull requests at this time"
         else
           messageRoom process.env.HUBOT_INSTRUCTOR_ROOM, "Update: There are no open pull requests at this time"
@@ -127,15 +129,13 @@ module.exports = (robot) ->
     date = hwDueDate()
     robot.brain.data.hwData[date] = []
 
-    console.log robot.brain.data.hwData[date]
-
     students = studentsHash()  
 
     getOpenPulls msg, (allPullRequests) ->
       _.each students, (student) ->
 
         payload = {
-          student_id: student['id'],
+          student_id: student.id,
           completed: ""
         }
 
@@ -144,22 +144,26 @@ module.exports = (robot) ->
 
         if studentMatch? then payload.completed = true else payload.completed = false
 
-        console.log payload
-
         robot.brain.data.hwData[date].push payload
+        robot.brain.data.completionStats[student.id]["allHWCodes"].push payload.completed
+
+        completionPercentage = calculateCompletionStat(robot.brain.data.completionStats[student.id])
+        robot.brain.data.completionStats[student.id]["completionPercentage"] = completionPercentage
 
         if msg?
           msg.send "HW updated for #{student["fname"]} #{student["lname"]}"
 
+  calculateCompletionStat = (student) ->
+    completions = _.reduce student.allHWCodes, (memo, stat) -> 
+      if stat then memo + 1 else memo
+    , 0
+    completionPercentage = (completions / student.allHWCodes.length) * 100
 
   messageRoom = (room, message) ->
     token = process.env.HUBOT_SLACK_TOKEN
     text = message.replace(" ", "%20")
     request "https://slack.com/api/chat.postMessage?token=#{token}&channel=#{room}&text=#{text}&as_user=true", (err, res, body) ->
       throw err if err
-      console.log body
-
-
 
   #===== HTTP Routes
   
@@ -169,7 +173,6 @@ module.exports = (robot) ->
 
   robot.router.get "/hubot/morningmessage", (req, res) ->
     studentRoom = process.env.HUBOT_STUDENT_ROOM
-    console.log studentRoom
     instructorRoom = process.env.HUBOT_INSTRUCTOR_ROOM
     now = moment()
     weekdays = [1..5]
@@ -180,17 +183,29 @@ module.exports = (robot) ->
     else
       res.end "Wrong day!"
 
+  # robot.router.get "/hubot/handlehw", (req, res) ->
+  #   studentRoom = process.env.HUBOT_STUDENT_ROOM
+  #   instructorRoom = process.env.HUBOT_INSTRUCTOR_ROOM
+  #   now = moment()
+  #   weekdays = [0..5]
+  #   if (moment.tz now.format(), "America/New_York").day() in weekdays
+  #     checkHW()
+  #     closeAllPullRequests "msg"
+  #     res.end "Response sent to room"
+  #   else
+  #     res.end "Wrong day!"
+
   robot.router.get "/hubot/handlehw", (req, res) ->
     studentRoom = process.env.HUBOT_STUDENT_ROOM
     instructorRoom = process.env.HUBOT_INSTRUCTOR_ROOM
-    now = moment()
-    weekdays = [0..5]
-    if (moment.tz now.format(), "America/New_York").day() in weekdays
-      checkHW()
-      closeAllPullRequests("msg")
-      res.end "Response sent to room"
-    else
-      res.end "Wrong day!"
+    # now = moment()
+    # weekdays = [0..5]
+    # if (moment.tz now.format(), "America/New_York").day() in weekdays
+    checkHW()
+    closeAllPullRequests "msg"
+    res.end "Response sent to room"
+    # else
+    #   res.end "Wrong day!"
 
 
 
@@ -221,8 +236,25 @@ module.exports = (robot) ->
     else
       msg.send "Sorry, you're not allowed to do that"
 
+  robot.respond /hw stats/i, (msg) ->
+    
+
   robot.respond /clear brain/i, (msg) ->
     robot.brain.data.hwData = {}  
 
   robot.respond /clear stats/i, (msg) ->
     robot.brain.data.completionStats = {}
+
+  robot.respond /comps/i, (msg) ->
+    console.log robot.brain.data.completionStats
+
+  robot.respond /clear comps/i,(msg) ->
+    robot.brain.data.completionStats = {}
+
+  robot.respond /insert/i, (msg) ->
+    robot.brain.data.completionStats["100"] = {"allHWCodes":[true, true, true, false], "completionPercentage": null}
+
+  robot.respond /comp test/i, (msg) ->
+    student = robot.brain.data.completionStats["100"]
+    stat = calculateCompletionStat(student)
+    console.log stat

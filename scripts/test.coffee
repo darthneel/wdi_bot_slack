@@ -1,6 +1,7 @@
 module.exports = (robot) ->
 
 	robot.respond /name/i, (msg) ->
+		console.log msg
 		# slack user info
 		console.log Object.keys msg.envelope.user
 		# native hubot user info
