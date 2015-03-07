@@ -242,8 +242,19 @@ module.exports = (robot) ->
       return
     studentMatch = _.find studentsHash(), (student) ->
       "#{student["fname"]} #{student["lname"]}" is msg.envelope.user.real_name
+    console.log msg.envelope.user.real_name
+    console.log studentMatch
     completionStat = robot.brain.data.completionStats[studentMatch.id]["completionPercentage"]
-    msg.send "You have completed #{completionStat}% of assigned homework."  
+    msg.send "You have completed #{completionStat}% of assigned homework."    
+
+    # robot.respond /hw stats2/i, (msg) ->
+    # unless msg.envelope.user.name is msg.envelope.room
+    #   msg.send "'hw stats' command only works over private message"
+    #   return
+    # studentMatch = _.find studentsHash(), (student) ->
+    #   "#{student["fname"]} #{student["lname"]}" is msg.envelope.user.real_name
+    # completionStat = robot.brain.data.completionStats[studentMatch.id]["completionPercentage"]
+    # msg.send "You have completed #{completionStat}% of assigned homework."  
 
   robot.respond /clear brain/i, (msg) ->
     robot.brain.data.hwData = {}  
