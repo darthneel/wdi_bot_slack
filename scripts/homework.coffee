@@ -3,7 +3,6 @@ fs      = require 'fs'
 moment  = require 'moment-timezone'
 request = require 'request'
 
-# https://slack.com/api/chat.postMessage?token=xoxb-3928777840-pP2WkycjYIaAQhnzMGWbjzhO&channel=G03T4G1UX&text=api%20test&as_user=true
 
 #===== Cron functions
 
@@ -241,6 +240,7 @@ module.exports = (robot) ->
       msg.send "'hw stats' command only works over private message"
       return
     studentMatch = _.find studentsHash(), (student) ->
+      console.log "#{student["fname"]} #{student["lname"]}"
       "#{student["fname"]} #{student["lname"]}" is msg.envelope.user.real_name
     console.log msg.envelope.user.real_name
     console.log studentMatch
