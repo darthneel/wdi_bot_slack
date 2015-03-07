@@ -238,7 +238,7 @@ module.exports = (robot) ->
 
   robot.respond /hw stats/i, (msg) ->
     unless msg.envelope.user.name != msg.envelope.room
-      msg.send msg.envelope.room
+      msg.send "hit unless"
       return
     msg.send msg.envelope.user.name  
 
