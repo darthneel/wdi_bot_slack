@@ -242,8 +242,8 @@ module.exports = (robot) ->
     studentMatch = _.find studentsHash(), (student) ->
       console.log "#{student["fname"]} #{student["lname"]}"
       "#{student["fname"]} #{student["lname"]}" == msg.envelope.user.real_name
-    console.log msg.envelope.user.real_name
-    console.log studentMatch
+    # console.log msg.envelope.user.real_name
+    # console.log studentMatch
     completionStat = robot.brain.data.completionStats[studentMatch.id]["completionPercentage"]
     msg.send "You have completed #{completionStat}% of assigned homework."    
 
