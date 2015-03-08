@@ -241,7 +241,7 @@ module.exports = (robot) ->
       return
     studentMatch = _.find studentsHash(), (student) ->
       console.log "#{student["fname"]} #{student["lname"]}"
-      "#{student["fname"]} #{student["lname"]}" === msg.envelope.user.real_name
+      "#{student["fname"]} #{student["lname"]}" == msg.envelope.user.real_name
     console.log msg.envelope.user.real_name
     console.log studentMatch
     completionStat = robot.brain.data.completionStats[studentMatch.id]["completionPercentage"]
