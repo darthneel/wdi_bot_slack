@@ -39,3 +39,8 @@ module.exports = (robot) ->
 
   robot.respond /set instructors/i, (msg) ->
     setInstructors(msg)
+
+  robot.respond /get students hash/i, (msg) ->
+    buffer = fs.readFileSync "./lib/students.json"
+    hash = buffer.toString()
+    msg.send "/code " + hash

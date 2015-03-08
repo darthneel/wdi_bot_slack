@@ -132,7 +132,7 @@ module.exports = (robot) ->
 
     getOpenPulls msg, (allPullRequests) ->
       _.each students, (student) ->
-
+        console.log student
         payload = {
           student_id: student.id,
           completed: ""
