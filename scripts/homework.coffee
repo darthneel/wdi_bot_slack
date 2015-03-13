@@ -81,7 +81,7 @@ module.exports = (robot) ->
   setUpCompletionStats = ->
     students = studentsHash()
     _.each students, (student) ->
-      robot.brain.data.completionStats[student.id] ?= {"allHWCodes":[], "completionPercentage": null}
+      robot.brain.data.completionStats[student.id] ?= {"allHWCodes":[], "completionPercentage": null, "name": "#{student["fname"]} #{student["lname"]}"}
 
   getOpenPulls = (msg, cb) ->
     robot.http("https://api.github.com/search/issues?access_token=#{process.env.HUBOT_GITHUB_TOKEN}&per_page=100&q=repo:#{process.env.COURSE_REPO}+type:pull+state:open")
@@ -135,6 +135,7 @@ module.exports = (robot) ->
         console.log student
         payload = {
           student_id: student.id,
+          name: "#{student["fname"]} #{student["lname"]}"
           completed: ""
         }
 
@@ -247,20 +248,14 @@ module.exports = (robot) ->
     completionStat = robot.brain.data.completionStats[studentMatch.id]["completionPercentage"]
     msg.send "You have completed #{completionStat}% of assigned homework."    
 
-    # robot.respond /hw stats2/i, (msg) ->
-    # unless msg.envelope.user.name is msg.envelope.room
-    #   msg.send "'hw stats' command only works over private message"
-    #   return
-    # studentMatch = _.find studentsHash(), (student) ->
-    #   "#{student["fname"]} #{student["lname"]}" is msg.envelope.user.real_name
-    # completionStat = robot.brain.data.completionStats[studentMatch.id]["completionPercentage"]
-    # msg.send "You have completed #{completionStat}% of assigned homework."  
-
   robot.respond /clear brain/i, (msg) ->
     robot.brain.data.hwData = {}  
 
   robot.respond /clear stats/i, (msg) ->
     robot.brain.data.completionStats = {}
+
+  robot.respond /hwdata/i, (msg) ->
+    console.log robot.brain.data.hwData
 
   robot.respond /comps/i, (msg) ->
     console.log robot.brain.data.completionStats
