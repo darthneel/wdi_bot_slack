@@ -1,7 +1,11 @@
 # Description:
 #   Allows for the creation and maintence of Cron jobs.
-#
+# 
 # Commands:
+#   hubot list jobs - Lists all Cron jobs in the database.
+#   hubot kill job <job number> - Stops the job with the number you supplied.
+#   hubot start job <job number> - Starts the job with the number you supplied.
+
 
 
 CronJob = require("cron").CronJob

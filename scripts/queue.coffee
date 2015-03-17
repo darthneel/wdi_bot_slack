@@ -1,3 +1,12 @@
+# Description:
+#   Allows Students to queue for help and for Instructors to pull students from the queue 
+#
+# Commands:
+#   hubot queue me for <what they need help for> - Queues student
+#   hubot student queue - Gives you the current queue
+#   hubot pop student -  Removes student from queue and assigns to Instructor who popped them.
+
+
 util   = require 'util'
 _      = require 'underscore'
 moment = require 'moment'

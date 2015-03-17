@@ -1,3 +1,13 @@
+# Description:
+#   Commands to work with your students homework and pull requests.
+#
+# Commands:
+#   hubot pr count - Tells you how many pull requests are currently open
+#   hubot incompletes - Gives you Github names of all students with no pull requests currently open.
+#   hubot close all pr - Closes all open pull requests, but does NOT save the completion data to the bots database. Useful for collecting quizzes and assessments.
+#   hubot check hw - Saves completion data to bot's database but does not NOT close pull requests. Use in conjunction with the 'close all pr' count command if pull requests need to be closed.
+#   hubot clear stats - Clears all completion stats saved in database. USE CAREFULLY.
+
 _       = require 'underscore'
 fs      = require 'fs'
 moment  = require 'moment-timezone'
