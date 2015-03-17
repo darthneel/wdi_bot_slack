@@ -272,7 +272,7 @@ module.exports = (robot) ->
     console.log robot.brain.data.completionStats
 
   robot.respond /setup comps/i,(msg) ->
-    robot.brain.data.completionStats = {}
+    setUpCompletionStats()
 
   robot.respond /insert/i, (msg) ->
     robot.brain.data.completionStats["100"] = {"allHWCodes":[true, true, true, false], "completionPercentage": null}
