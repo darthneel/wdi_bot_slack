@@ -54,7 +54,7 @@ module.exports = (robot) ->
     console.log "DB HAS LOADED"
     sendMorningMessage(robot)
     hwHandler(robot)
-    setUpCompletionStats()
+    setUpCompletionStats(robot)
 
 #==== Helper functions
 
@@ -271,7 +271,7 @@ module.exports = (robot) ->
   robot.respond /comps/i, (msg) ->
     console.log robot.brain.data.completionStats
 
-  robot.respond /clear comps/i,(msg) ->
+  robot.respond /setup comps/i,(msg) ->
     robot.brain.data.completionStats = {}
 
   robot.respond /insert/i, (msg) ->
