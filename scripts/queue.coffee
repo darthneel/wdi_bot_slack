@@ -50,14 +50,18 @@ module.exports = (robot) ->
 
   robot.respond /(pop )?student( pop)?/i, (msg) ->
     return unless msg.match[1]? || msg.match[2]?
-    if _.isEmpty robot.brain.data.instructorQueue
-      msg.send "Student queue is empty"
-    else
-      student = popStudent()
-      student.poppedAt = new Date()
-      student.poppedBy = msg.envelope.user.real_name
-      robot.brain.data.instructorQueuePops.push student
-      msg.reply "go help #{student.name} with #{student.reason}, queued at #{tfmt student.queuedAt}"
+    instructors = ["Jeff Konowitch", "Neel Patel", "Andrew Fritz", "Sean Jackson"]
+    if  msg.envelope.user.real_name in instructors
+      if _.isEmpty robot.brain.data.instructorQueue
+        msg.send "Student queue is empty"
+      else
+        student = popStudent()
+        student.poppedAt = new Date()
+        student.poppedBy = msg.envelope.user.real_name
+        robot.brain.data.instructorQueuePops.push student
+        msg.reply "Go help #{student.name} with #{student.reason}, queued at #{tfmt student.queuedAt}"
+    else 
+      msg.reply "Sorry, you do not have permission to do that!"
 
   robot.respond /student q(ueue)?/i, (msg) ->
     if _.isEmpty robot.brain.data.instructorQueue
@@ -66,7 +70,7 @@ module.exports = (robot) ->
       msg.send stringifyQueue()
 
   robot.respond /empty q(ueue)?/i, (msg) ->
-    instructors = ["Jeff Konowitch", "Neel Patel", "Andrew Fritz"]
+    instructors = ["Jeff Konowitch", "Neel Patel", "Andrew Fritz", "Sean Jackson"]
     if instructors.indexOf(msg.envelope.user.real_name) != -1
       robot.brain.data.instructorQueue = []
       msg.reply "cleared the queue"

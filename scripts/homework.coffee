@@ -2,6 +2,7 @@ _       = require 'underscore'
 fs      = require 'fs'
 moment  = require 'moment-timezone'
 request = require 'request'
+cors    = require 'cors'
 
 
 #===== Cron functions
@@ -167,7 +168,7 @@ module.exports = (robot) ->
 
   #===== HTTP Routes
   
-  robot.router.get "/hubot/hwdata", (req, res) ->
+  robot.router.get "/hubot/hwdata", cors(), (req, res) ->
     data = JSON.stringify robot.brain.data.hwData
     res.end data
 
@@ -183,29 +184,29 @@ module.exports = (robot) ->
     else
       res.end "Wrong day!"
 
-  # robot.router.get "/hubot/handlehw", (req, res) ->
-  #   studentRoom = process.env.HUBOT_STUDENT_ROOM
-  #   instructorRoom = process.env.HUBOT_INSTRUCTOR_ROOM
-  #   now = moment()
-  #   weekdays = [0..5]
-  #   if (moment.tz now.format(), "America/New_York").day() in weekdays
-  #     checkHW()
-  #     closeAllPullRequests "msg"
-  #     res.end "Response sent to room"
-  #   else
-  #     res.end "Wrong day!"
-
   robot.router.get "/hubot/handlehw", (req, res) ->
     studentRoom = process.env.HUBOT_STUDENT_ROOM
     instructorRoom = process.env.HUBOT_INSTRUCTOR_ROOM
-    # now = moment()
-    # weekdays = [0..5]
-    # if (moment.tz now.format(), "America/New_York").day() in weekdays
-    checkHW()
-    closeAllPullRequests "msg"
-    res.end "Response sent to room"
-    # else
-    #   res.end "Wrong day!"
+    now = moment()
+    weekdays = [0..5]
+    if (moment.tz now.format(), "America/New_York").day() in weekdays
+      checkHW()
+      closeAllPullRequests "msg"
+      res.end "Response sent to room"
+    else
+      res.end "Wrong day!"
+
+  # robot.router.get "/hubot/handlehw", (req, res) ->
+  #   studentRoom = process.env.HUBOT_STUDENT_ROOM
+  #   instructorRoom = process.env.HUBOT_INSTRUCTOR_ROOM
+  #   # now = moment()
+  #   # weekdays = [0..5]
+  #   # if (moment.tz now.format(), "America/New_York").day() in weekdays
+  #   checkHW()
+  #   closeAllPullRequests "msg"
+  #   res.end "Response sent to room"
+  #   # else
+  #   #   res.end "Wrong day!"
 
 
 
