@@ -44,3 +44,8 @@ module.exports = (robot) ->
     buffer = fs.readFileSync "./lib/students.json"
     array = buffer.toString()
     msg.send "```" + array + "```"
+
+  robot.respond /get instructors hash/i, (msg) ->
+    buffer = fs.readFileSync "./lib/instructors.json"
+    hash = buffer.toString()
+    msg.send "```" + hash + "```"
