@@ -1,10 +1,11 @@
-##Environment Variables Needed for Hubot to Work
+##Environment Variables Needed for Hubot
 
 ---
 
 **For the Hubot to work, it will require each of the below variables set on Heroku**
 
 - Use the `heroku config:set` command to assign each of these.
+- NOTE: You will see a REDISCLOUD variable needed below. The Heroku docs tell you to use RedisToGo, however the RedisCloud free tier gives you more free space and hooks up directly to the Hubot with no extra configuring.
 
 |Environment Variable  |  Example (if applicable)   |
 |:-:  |:-:  |
